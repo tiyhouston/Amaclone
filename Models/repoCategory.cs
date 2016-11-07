@@ -1,47 +1,51 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using nsCategory; // I'm assuming ns stands for namespace?
+using nsCategory;
 
-namespace nsRepoCategory {
+namespace nsCategory {
+
     public interface ICategory {
         List<Category> getAll(); 
-        void add (List<Category> c);
+        void add (Category c);
         bool delete(int id);
         Category get(int id);
         Category update(int id, Category c);
     }
+
     public class CategoryAPI : ICategory {
-        private List<Category> categories = new List<Category>(); //why private??
-        private int idCount = 0;
+
         // Constructor
-        public CategoryAPI() {
-            // Seed data goes here
+        private DB db;
+        public CategoryAPI (DB db) {
+            this.db = db;
         }
 
         // Methods - Add New Category
-        public void add (List<Category> c) {
-            foreach (Category cToAdd in c)
-            {
-                cToAdd.Id = idCount++;
-                cToAdd.CreatedAt = DateTime.Now;        
-                categories.Add(cToAdd);
-            }
+        public void add (Category c) {
+            db.Categories.Add(c);
         }
+
         //Get All Categories
-        public List<Category> getAll() => categories;
+        public List<Category> getAll() => db.Categories.ToList();
 
         //Get One Category using Id
-        public Category get(int id) => categories.First(x => x.Id == id);
+        public Category get(int id) => db.Categories.First(x => x.Id == id);
 
         //Update Existing Category if matching Id is found
         public Category update(int id, Category c) {
-            if (categories.Remove(categories.First(x => x.Id == id))) {
-                categories.Add(c);
-                return categories.Last();
-            } else { return null; }
+            if (db.Categories.Remove(db.Categories.First(x => x.Id == id)) != null) {
+                db.Categories.Add(c);
+                return c;
+            } else {
+                return null;
+            }
         }
+
         // Delete Category if matching Id is found
-        public bool delete(int id) => (categories.Remove(categories.First(x => x.Id == id))) ? true : false;
+        public bool delete(int id) {
+            Category c = db.Categories.First(x => x.Id == id); 
+            return (db.Categories.Remove(c) != null) ? true : false;
+        }
     }
 }

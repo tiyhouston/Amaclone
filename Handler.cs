@@ -14,10 +14,13 @@ using Microsoft.AspNetCore.Mvc.Formatters.Xml;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.IO;
 
 using nsCategory;
-using nsProduct;
-using StoreRepo;
+// using nsProduct;
+// using StoreRepo;
 
 public partial class Handler {
 
@@ -42,11 +45,10 @@ public partial class Handler {
 
     public void ConfigureServices(IServiceCollection services)
     {
-        // sqlite
-        // services.AddDbContext<DB>(options => options.UseSqlite(Configuration.GetConnectionString("Sqlite")));
 
         // in-memory
         services.AddDbContext<DB>(options => options.UseInMemoryDatabase());
+        services.AddSingleton<ICategory, CategoryAPI>();
 
         // postgresql
         // Use a PostgreSQL database
@@ -57,15 +59,7 @@ public partial class Handler {
         //     )
         // );
 
-        // services.AddIdentity<User, IdentityRole>()
-        //     .AddEntityFrameworkStores<DB>()
-        //     .AddDefaultTokenProviders();
-
-        services.AddDistributedMemoryCache();
-        services.AddSession(o => {
-            o.IdleTimeout = TimeSpan.FromSeconds(120);
-        });
- services.AddCors(options =>
+        services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy",
                 builder => builder.AllowAnyOrigin()
@@ -74,13 +68,6 @@ public partial class Handler {
                 .AllowCredentials() );
         });
         services.AddMvc();
-        // services.AddSingleton<nsRepoProduct.IProduct, nsRepoProduct.ProductAPI>();
-        // services.AddSingleton<StoreRepo.IStore, StoreRepo.StoreRepo>();
-
-        // instead of
-        //      services.AddScoped<IRepository<Card>, Repo<Card>>();
-        // do
-        RegisterRepos(services);
 
         // Inject an implementation of ISwaggerProvider with defaulted settings applied
         services.AddSwaggerGen();
@@ -103,7 +90,7 @@ public partial class Handler {
         // logger.AddConsole(Configuration.GetSection("Logging"));
         logger.AddDebug();
 
-        app.UseSession();
+        // app.UseSession();
         app.UseCors("CorsPolicy");
 
         // Example custom middleware
@@ -121,7 +108,8 @@ public partial class Handler {
             app.UseStatusCodePages();
         }
 
-        Seed.Initialize(db, env.IsDevelopment());
+        // Seed.Initialize(db, env.IsDevelopment());
+        db.Database.EnsureCreated();
 
         // app.UseApplicationInsightsRequestTelemetry();
         // app.UseApplicationInsightsExceptionTelemetry();
@@ -164,4 +152,14 @@ public partial class Handler {
         app.UseSwaggerUi();
     }
 
+}
+
+
+public partial class DB : DbContext {
+    public DB(DbContextOptions<DB> options): base(options){}
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+    }
 }
