@@ -7,59 +7,43 @@ namespace nsRepoProduct {
     public interface IProduct {
         List<Product> search(string searchTerm); 
         List<Product> getAll(); 
-        void add (List<Product> p);
+        void add (Product p);
         bool delete(int id);
         Product get(int id);
-        Product update(int id, Product s);
+        Product update(int id, Product p);
     }
 
     public class ProductAPI : IProduct {
-        private List<Product> products = new List<Product>();
-        private int idCount = 0;
-        // Constructor
-        public ProductAPI() {
-            // TODO use this to SEED products
+        private DB db;
+        public ProductAPI (DB db) {
+            this.db = db;
         }
-
-        // Methods
-        public void add (List<Product> p) {
-            foreach (Product pToAdd in p)
-            {
-                pToAdd.Id = idCount++;
-                pToAdd.CreatedAt = DateTime.Now;
-                
-                int urlCount = 0;
-                foreach (URL iURL in pToAdd.ImageURLs)
-                {
-                    iURL.Id = urlCount++;
-                    iURL.CreatedAt = DateTime.Now;
-                    iURL.ProductId = pToAdd.Id;
-                }
-                products.Add(pToAdd);
-            }
+        public void add (Product p) {
+            db.Products.Add(p);
         }
-
-        public List<Product> getAll() => products;
-
+        public List<Product> getAll() {
+            return db.Products.ToList();
+        }
         public List<Product> search(string searchTerm){
             List<Product> productsWithSearchTerm = new List<Product>();
-            foreach (Product listWS in products){
-                if (listWS.Title.Contains(searchTerm) || listWS.Description.Contains(searchTerm)) {
-                    productsWithSearchTerm.Add(listWS);
+            foreach (Product p in db.Products){
+                if (p.Title.ToLower().Contains(searchTerm) || p.Description.ToLower().Contains(searchTerm)) {
+                    productsWithSearchTerm.Add(p);
                 }  
             }
             return productsWithSearchTerm;
         }
-        
-        public Product get(int id) => products.First(x => x.Id == id);
-
+        public Product get(int id) {
+            return db.Products.First(x => x.Id == id);
+        }
         public Product update(int id, Product p) {
-            if (products.Remove(products.First(x => x.Id == id))) {
-                products.Add(p);
-                return products.Last();
+            if (db.Products.Remove(db.Products.First(x => x.Id == id)) != null) {
+                db.Products.Add(p);
+                return p;
             } else { return null; }
         }
-
-        public bool delete(int id) => (products.Remove(products.First(x => x.Id == id))) ? true : false;
+        public bool delete(int id) {
+            return (db.Products.Remove(db.Products.First(x => x.Id == id)) != null) ? true : false;
+        }
     }
 }

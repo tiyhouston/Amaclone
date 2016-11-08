@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.IO;
 
 using nsCategory;
-// using nsProduct;
+using nsProduct;
 // using StoreRepo;
 
 public partial class Handler {
@@ -49,6 +49,7 @@ public partial class Handler {
         // in-memory
         services.AddDbContext<DB>(options => options.UseInMemoryDatabase());
         services.AddSingleton<ICategory, CategoryAPI>();
+        services.AddSingleton<nsRepoProduct.IProduct, nsRepoProduct.ProductAPI>();
 
         // postgresql
         // Use a PostgreSQL database

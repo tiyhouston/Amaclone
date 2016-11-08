@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using nsCategory;
 
 namespace nsProduct
@@ -29,4 +30,7 @@ namespace nsProduct
         [Required]
         public int ProductId { get; set; }
     }
+}
+public partial class DB : DbContext {
+    public DbSet<nsProduct.Product> Products {get;set;}
 }
