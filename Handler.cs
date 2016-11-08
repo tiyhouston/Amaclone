@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.Formatters.Xml;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
+using StoreRepo;
+
 
 public partial class Handler {
 
@@ -62,9 +64,18 @@ public partial class Handler {
         services.AddSession(o => {
             o.IdleTimeout = TimeSpan.FromSeconds(120);
         });
+ services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy",
+                builder => builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials() );
+        });
         services.AddMvc();
-        services.AddCors();
-
+        services.AddSingleton<IProduct, ProductAPI>();
+        services.AddSingleton<IRepository<IStore>, StoreRepo>();
+        services.AddSingleton<I>
         // instead of
         //      services.AddScoped<IRepository<Card>, Repo<Card>>();
         // do
@@ -92,7 +103,7 @@ public partial class Handler {
         logger.AddDebug();
 
         app.UseSession();
-        app.UseCors("AllowAllOrigins");
+        app.UseCors("CorsPolicy");
 
         // Example custom middleware
         // app.Use(async (context, next) =>
