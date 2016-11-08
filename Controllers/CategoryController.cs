@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using nsCategory;
 
-
 [Route("/api/category")]
 public class CategoryController : Controller {
     // Going to need some help with these 3 next lines; not super clear on the singleton stuff, I just made it C instead of P lol.
@@ -30,7 +29,7 @@ public class CategoryController : Controller {
         return Ok();
     }
 
-    [HttpDelete("/{id}")]
+    [HttpDelete("{id}")]
     public IActionResult Delete(int id) {
         if (id != 0) { 
             if (categoryRepo.delete(id)) { 
@@ -40,7 +39,7 @@ public class CategoryController : Controller {
         return NotFound();
     }
 
-    [HttpPut("/{id}")]
+    [HttpPut("{id}")]
     // syntax not super clear on this one for me, just the FromBody part
     public IActionResult Update(int id, [FromBody] Category c) {
         if (id != 0) { 

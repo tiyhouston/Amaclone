@@ -21,6 +21,7 @@ namespace StoreRepo {
         }
         public void add (Store s) {
             db.Stores.Add(s);
+            db.SaveChanges();
         }
         public List<Store> getAll() {
             return db.Stores.ToList();
@@ -40,6 +41,7 @@ namespace StoreRepo {
         public Store update(int id, Store s) {
             if (db.Stores.Remove(db.Stores.First(x => x.Id == id)) != null) {
                 db.Stores.Add(s);
+                db.SaveChanges();
                 return s;
             } else { return null; }
         }
