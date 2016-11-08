@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using nsRepoProduct;
+
+
+[Route("/api/product")]
+public class IProductController : Controller {
+    
+    private IProduct prodCont;
+    public IProductController (IProduct singletonP) {
+        prodCont = singletonP;
+    }
+
+    [HttpGet("/")]
+    public IActionResult GetAll() {
+        return Ok(prodCont.getAll());
+    }
+
+    [HttpPost("/")]
+    public IActionResult Add(List<Product> p) {
+        if (p.count > 0) {prodCont.add(p)}
+        return Ok(prodCont.getAll());
+    }
+
+    [HttpDelete("/{id}")]
+    public IActionResult Delete(int id) {
+        if (id != "") { 
+            if (prodCont.delete(id)) { return Ok(prodCont.getAll()); } 
+        }
+        return NotFound();
+    }
+
+    [HttpPut("/{id}")]
+    public IActionResult Update(int id, [FromBody] newP) {
+        if (id != "") { 
+            return Ok(prodCont.update(id, newP));
+        }
+        return NotFound();
+    }
+
+    [HttpGet("/search?")]
+    public IActionResult Search(string term){
+        if (term != "")
+            {return prodCont.search(term);}
+        else {return NotFound();}
+    }
+
+}
