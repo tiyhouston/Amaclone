@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using nsStore;
 using StoreRepo;
 
-[Route("/api/product")]
-public class IStoreController : Controller {
+[Route("/api/store")]
+public class StoreController : Controller {
     
     private IStore stores;
-    public IStoreController (IStore s) {
+    public StoreController (IStore s) {
         stores = s;
     }
 
@@ -29,7 +29,7 @@ public class IStoreController : Controller {
         return Ok();
     }
 
-    [HttpDelete("/{id}")]
+    [HttpDelete("{id}")]
     public IActionResult Delete(int id) {
         if (id != 0) { 
             if (stores.delete(id)) { return Ok(); } 
@@ -37,7 +37,7 @@ public class IStoreController : Controller {
         return NotFound();
     }
 
-    [HttpPut("/{id}")]
+    [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] Store s) {
         if (id != 0) { 
             return Ok(stores.update(id, s));
@@ -45,10 +45,10 @@ public class IStoreController : Controller {
         return NotFound();
     }
 
-    [HttpGet("/search?")]
-    public IActionResult Search(string term){
-        if (term != "")
-            {return Ok(stores.search(term));}
+    [HttpGet("{search}")]
+    public IActionResult Search(string search){
+        if (search != "")
+            {return Ok(stores.search(search));}
         else {return NotFound();}
     }
 

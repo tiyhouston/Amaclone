@@ -6,7 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-//using StoreModel;
+
+using nsProduct;
 
 namespace nsStore{ 
     public class Store{
@@ -15,8 +16,7 @@ namespace nsStore{
         [Required]
         public string Title { get; set; }
         [Required]
-        public List<Store> Stores { get; set; }
-
+        public List<Product> Products { get; set; }
     }
 }
 public partial class DB : DbContext {

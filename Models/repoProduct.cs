@@ -20,6 +20,7 @@ namespace nsRepoProduct {
         }
         public void add (Product p) {
             db.Products.Add(p);
+            db.SaveChanges();
         }
         public List<Product> getAll() {
             return db.Products.ToList();
@@ -39,6 +40,7 @@ namespace nsRepoProduct {
         public Product update(int id, Product p) {
             if (db.Products.Remove(db.Products.First(x => x.Id == id)) != null) {
                 db.Products.Add(p);
+                db.SaveChanges();
                 return p;
             } else { return null; }
         }

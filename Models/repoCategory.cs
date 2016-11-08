@@ -24,18 +24,24 @@ namespace nsCategory {
         // Methods - Add New Category
         public void add (Category c) {
             db.Categories.Add(c);
+            db.SaveChanges();
         }
 
         //Get All Categories
-        public List<Category> getAll() => db.Categories.ToList();
+        public List<Category> getAll() {
+            return db.Categories.ToList();
+        }
 
         //Get One Category using Id
-        public Category get(int id) => db.Categories.First(x => x.Id == id);
+        public Category get(int id) {
+            return db.Categories.First(x => x.Id == id);
+        }
 
         //Update Existing Category if matching Id is found
         public Category update(int id, Category c) {
             if (db.Categories.Remove(db.Categories.First(x => x.Id == id)) != null) {
                 db.Categories.Add(c);
+                db.SaveChanges();
                 return c;
             } else {
                 return null;

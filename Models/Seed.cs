@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 using nsProduct;
 using nsCategory;
+using nsStore;
 
 public static class Seed
 {
@@ -81,7 +82,7 @@ public static class Seed
             }
         };
 
-        var htown = new Store { Name="TIY Houston Amazon Store", Products = p };
+        var htown = new Store { Title="TIY Houston Amazon Store", Products = p };
 
         db.Stores.Add(htown);
         db.SaveChanges();

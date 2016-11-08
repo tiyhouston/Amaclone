@@ -7,10 +7,10 @@ using nsRepoProduct;
 using nsProduct;
 
 [Route("/api/product")]
-public class IProductController : Controller {
+public class ProductController : Controller {
     
     private IProduct products;
-    public IProductController (IProduct p) {
+    public ProductController (IProduct p) {
         products = p;
     }
 
@@ -25,26 +25,26 @@ public class IProductController : Controller {
         return Ok();
     }
 
-    [HttpDelete("/{id}")]
+    [HttpDelete("{id}")]
     public IActionResult Delete(int id) {
         if (id != 0) { 
-            if (products.Delete(id)) { return Ok(); } 
+            if (products.delete(id)) { return Ok(); } 
         }
         return NotFound();
     }
 
-    [HttpPut("/{id}")]
+    [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] Product p) {
         if (id != 0) { 
-            return Ok(products.Update(id, p));
+            return Ok(products.update(id, p));
         }
         return NotFound();
     }
 
-    [HttpGet("/search?")]
-    public IActionResult Search(string term){
-        if (term != 0)
-            {return products.Search(term);}
+    [HttpGet("{search}")]
+    public IActionResult Search(string search){
+        if (search != "")
+            {return Ok(products.search(search));}
         else {return NotFound();}
     }
 
